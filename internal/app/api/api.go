@@ -3,20 +3,18 @@ package api
 import (
 	"net/http"
 
-	"github.com/arvph/ServerAPI/storage"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
-// Base API server instance description
+// базовый API сервер
 type API struct {
-	config  *Config
-	logger  *logrus.Logger
-	router  *mux.Router
-	storage *storage.Storage
+	config *Config
+	logger *logrus.Logger
+	router *mux.Router
 }
 
-// API constructor: build base API instance
+// API конструктор
 func New(config *Config) *API {
 	return &API{
 		config: config,
@@ -25,21 +23,17 @@ func New(config *Config) *API {
 	}
 }
 
-// Start http server, configure loggers, router, database connection and etc...
+// старт сервера, конфигурация логгера, роутера и БД...
 func (api *API) Start() error {
-	// Trying to configure Logger
+	// конфигурация логгера
 	if err := api.configureLoggerField(); err != nil {
 		return err
 	}
-
+	// подтверждение, что логгер сконфигерирован
 	api.logger.Info("starting api server at port:", api.config.BindAddr)
 
-	// router configs
+	// конфигурация маршрутизатора
 	api.configureRouterField()
-	// storage configs
-	if err := api.configureStorageField(); err != nil {
-		return nil
-	}
-	// http server starts
+
 	return http.ListenAndServe(api.config.BindAddr, api.router)
 }

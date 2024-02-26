@@ -13,23 +13,22 @@ var (
 )
 
 func init() {
-	// getting the path to config file as argument
+	// адрес до конфигурационного файла
 	flag.StringVar(&configPath, "path", "configs/api.toml", "path to config file .toml format")
 }
 
 func main() {
-	// initialization of variable config Path with received value
 	flag.Parse()
 	log.Println("It works!")
-	// server instance initialization
+
+	// инициализация настроек сервера
 	config := api.NewConfig()
-	// Get new configs from .toml if the file exists
+	// читаем из .toml, в котором могут быть новые конфигурационные данные
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {
-		log.Println("Cannot find configs file. using default values:", err)
+		log.Println("Cannot find configs file. Using default values:", err)
 	}
 	server := api.New(config)
 
-	// api server start
 	log.Fatal(server.Start())
 }

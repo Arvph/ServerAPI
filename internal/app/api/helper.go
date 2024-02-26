@@ -3,11 +3,10 @@ package api
 import (
 	"net/http"
 
-	"github.com/arvph/ServerAPI/storage"
 	"github.com/sirupsen/logrus"
 )
 
-// API congig instance (logger field)
+// конфигирация API instance (поле logger)
 func (a *API) configureLoggerField() error {
 	log_level, err := logrus.ParseLevel(a.config.LoggerLevel)
 	if err != nil {
@@ -17,20 +16,9 @@ func (a *API) configureLoggerField() error {
 	return nil
 }
 
-// Router configs (router field)
+// конфигурация маршрутизатора (поле router API)
 func (a *API) configureRouterField() {
 	a.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello! This is REST API"))
 	})
-}
-
-// Storage configs
-func (a *API) configureStorageField() error {
-	storage := storage.New(a.config.Storage)
-
-	if err := storage.Open(); err != nil {
-		return err
-	}
-	a.storage = storage
-	return nil
 }
